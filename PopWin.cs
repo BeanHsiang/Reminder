@@ -77,6 +77,7 @@ namespace Reminder
                 //    this.Opacity = i;
                 //    Thread.Sleep(500);//将线程沉睡时间调的越小升起的越快
                 //}
+                //Thread.Sleep(Interval * 1000);
                 this.Show();
                 this.Refresh();
                 Thread tr = new Thread(() =>
@@ -106,7 +107,7 @@ namespace Reminder
             //Thread.Sleep(Interval * 1000);
             //this.Hide();
             //this.WindowState = FormWindowState.Normal;
-            while (true)
+            while (!backgroundWorker1.CancellationPending)
             {
                 //if (DateTime.Now.TimeOfDay >= nextTime)
                 //{
@@ -124,6 +125,7 @@ namespace Reminder
                 //this.ShowInTaskbar = false;
                 //this.Hide();
             }
+            e.Cancel = true;
         }
 
         private void notifyIcon1_MouseClick(object sender, MouseEventArgs e)
@@ -147,13 +149,10 @@ namespace Reminder
             }
         }
 
-        //private void PopWin_SizeChanged(object sender, EventArgs e)
-        //{
-        //    if (this.WindowState == FormWindowState.Minimized)
-        //    {
-        //        this.Hide(); //或者是this.Visible = false;
-        //        this.notifyIcon1.Visible = true;
-        //    }
-        //}
+        private void RestartToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Thread.CurrentThread.Interrupt();
+            this.backgroundWorker1.CancelAsync();
+        }
     }
 }
